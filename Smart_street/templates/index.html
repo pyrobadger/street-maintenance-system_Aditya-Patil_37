@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="RhythmusByte" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nav Bar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Kanit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url("{{ url_for('static', filename='images/background.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .user-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            color: #fff;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .navbar .logo a {
+            color: #fff;
+            font-size: 24px;
+            text-decoration: none;
+        }
+        .navbar .nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        .navbar .nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .navbar .nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .team-section {
+            text-align: center;
+            padding: 100px 0;
+        }
+        .team-section h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Nav Bar -->
+    
+    <header>
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Welcome to the Pothole Detection System</a>
+        </div>
+        <div class="nav">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/signup">Sign up</a></li>
+                {% if username %}
+                <li><a href="/logout">Logout</a></li>
+                {% else %}
+                <li><a href="/login">Login</a></li>
+                {% endif %}
+                <li><a href="/report_pothole">Report Pothole</a></li>
+                <li><a href="/view_reports">View Reports</a></li>
+            </ul>
+            {% if username %}
+            <div class="user-info">
+                Logged in as: {{ username }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    </header>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <h2>4 Bits</h2>
+    </section>
+
+</body>
+</html>

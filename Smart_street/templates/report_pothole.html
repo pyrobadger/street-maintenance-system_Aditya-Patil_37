@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Report Pothole</title>
+    <style>
+        .main {
+            width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form1 {
+            display: flex;
+            flex-direction: column;
+        }
+        .form1 input, .form1 select {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form1 button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form1 button:hover {
+            background-color: #45a049;
+        }
+        .file-name {
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+        .flash-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #4CAF50;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Report Pothole</h1>
+    <p>Welcome, {{ session['username'] }}! You can report a pothole here.</p>
+    <div class="main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form class="form1" action="/report_pothole" method="post" enctype="multipart/form-data" onsubmit="return verifyAadhaar()">
+            <label for="aadhaar">Aadhaar Number:</label>
+            <input type="text" id="aadhaar" name="aadhaar" placeholder="Enter Aadhaar Number" required>
+            
+            <label for="location">Location of Pothole:</label>
+            <input type="text" id="location" name="location" placeholder="Detecting location..." required>
+            
+            <label for="severity">Severity of Pothole:</label>
+            <select id="severity" name="severity" required>
+                <option value="low">Low</option>
+                <option value="high">High</option>
+                <option value="very_high">Very High</option>
+            </select>
+            
+            <label for="image">Upload Image of Pothole:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <span class="file-name" id="file-name">No file chosen</span>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('location').placeholder = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            document.getElementById('location').value = `Latitude: ${lat}, Longitude: ${lon}`;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('location').placeholder = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('location').placeholder = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('location').placeholder = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('location').placeholder = "An unknown error occurred.";
+                    break;
+            }
+        }
+
+        document.getElementById('image').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+            document.getElementById('file-name').textContent = fileName;
+        });
+
+        window.onload = getLocation;
+
+        function verifyAadhaar() {
+            const aadhaar = document.getElementById('aadhaar').value;
+            // Simulate an API call to verify Aadhaar number
+            if (aadhaar.length !== 12 || isNaN(aadhaar)) {
+                alert('Invalid Aadhaar number. Please enter a valid 12-digit Aadhaar number.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
